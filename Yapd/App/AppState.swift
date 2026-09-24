@@ -15,6 +15,7 @@ final class AppState {
     let isFirstLaunch: Bool
 
     let recordingCoordinator: RecordingCoordinator
+    let transcriptionService: any TranscriptionService = AppleTranscriptionService()
     let permissionManager = PermissionManager()
 
     private let settingsStore: SettingsStore
@@ -26,7 +27,7 @@ final class AppState {
         settingsStore = store
         settings = loaded
         isFirstLaunch = !loaded.hasLaunchedBefore
-        recordingCoordinator = RecordingCoordinator(transcriptionService: AppleTranscriptionService())
+        recordingCoordinator = RecordingCoordinator(transcriptionService: transcriptionService)
         refreshPermissions()
         applyHotkey()
         updateSettings { $0.hasLaunchedBefore = true }
@@ -68,6 +69,8 @@ final class AppState {
 
     func refreshPermissions() {
         for kind in PermissionKind.allCases {
+            // Checking computer audio access starts a tap, which would disrupt a recording.
+            if kind == .systemAudio, isRecording { continue }
             let current = permissionManager.status(for: kind, systemAudioRequested: settings.systemAudioRequested)
             let previous = permissions[kind]
             guard current != previous else { continue }
@@ -105,7 +108,8 @@ final class AppState {
                 into: recordingsDirectory,
                 microphoneDeviceID: settings.selectedMicrophoneID,
                 microphoneAllowed: status(of: .microphone) == .granted,
-                systemAudioAccess: status(of: .systemAudio)
+                systemAudioAccess: status(of: .systemAudio),
+                transcriptionLanguage: settings.transcriptionLanguageIdentifier
             )
             // Starting a tap is what makes macOS ask.
             if status(of: .systemAudio) == .notDetermined {

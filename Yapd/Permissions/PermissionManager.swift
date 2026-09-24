@@ -1,7 +1,6 @@
 import Foundation
 import AppKit
 import AVFoundation
-import Speech
 @preconcurrency import ApplicationServices
 
 /// The individual macOS permissions Yapd needs, and why. Each case maps to
@@ -10,7 +9,6 @@ import Speech
 enum PermissionKind: String, CaseIterable, Identifiable, Equatable {
     case microphone
     case systemAudio
-    case speechRecognition
     case accessibility
 
     var id: String { rawValue }
@@ -19,7 +17,6 @@ enum PermissionKind: String, CaseIterable, Identifiable, Equatable {
         switch self {
         case .microphone: return "Microphone"
         case .systemAudio: return "System Audio"
-        case .speechRecognition: return "Speech Recognition"
         case .accessibility: return "Accessibility"
         }
     }
@@ -29,7 +26,6 @@ enum PermissionKind: String, CaseIterable, Identifiable, Equatable {
         switch self {
         case .microphone: return "Records your side of the call."
         case .systemAudio: return "Records the other participants."
-        case .speechRecognition: return "Writes the transcript on this Mac."
         case .accessibility: return "Lets the recording shortcut work in any app."
         }
     }
@@ -41,8 +37,6 @@ enum PermissionKind: String, CaseIterable, Identifiable, Equatable {
             return URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone")
         case .systemAudio:
             return URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")
-        case .speechRecognition:
-            return URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_SpeechRecognition")
         case .accessibility:
             return URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
         }
@@ -64,8 +58,6 @@ final class PermissionManager {
         switch kind {
         case .microphone:
             return Self.map(AVCaptureDevice.authorizationStatus(for: .audio))
-        case .speechRecognition:
-            return Self.map(SFSpeechRecognizer.authorizationStatus())
         case .accessibility:
             // Untrusted can't be told apart from never-asked; prompting again
             // is harmless and leads to the right System Settings pane.
@@ -82,21 +74,11 @@ final class PermissionManager {
         switch kind {
         case .microphone:
             _ = await AVCaptureDevice.requestAccess(for: .audio)
-        case .speechRecognition:
-            await Self.requestSpeechAuthorization()
         case .accessibility:
             let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
             _ = AXIsProcessTrustedWithOptions(options)
         case .systemAudio:
             await SystemAudioTap.requestAccess()
-        }
-    }
-
-    /// Nonisolated because Speech calls back on a background queue, and a
-    /// callback written inside a main-actor method would trap there.
-    private nonisolated static func requestSpeechAuthorization() async {
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            SFSpeechRecognizer.requestAuthorization { _ in continuation.resume() }
         }
     }
 
@@ -106,15 +88,6 @@ final class PermissionManager {
     }
 
     private static func map(_ status: AVAuthorizationStatus) -> PermissionStatus {
-        switch status {
-        case .authorized: return .granted
-        case .denied, .restricted: return .denied
-        case .notDetermined: return .notDetermined
-        @unknown default: return .notDetermined
-        }
-    }
-
-    private static func map(_ status: SFSpeechRecognizerAuthorizationStatus) -> PermissionStatus {
         switch status {
         case .authorized: return .granted
         case .denied, .restricted: return .denied

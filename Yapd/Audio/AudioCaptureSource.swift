@@ -16,6 +16,14 @@ enum AudioSource: String, CaseIterable {
         case .microphone: return "Microphone"
         }
     }
+
+    /// How this source is named in a transcript.
+    var speakerLabel: String {
+        switch self {
+        case .systemAudio: return "Others"
+        case .microphone: return "You"
+        }
+    }
 }
 
 /// One independent capture source. Sources never depend on each other, so

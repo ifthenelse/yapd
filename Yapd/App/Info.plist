@@ -30,7 +30,5 @@
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Yapd records your microphone so your side of a meeting is captured alongside the call audio.</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Yapd uses on-device speech recognition to produce a text transcript. No audio leaves this Mac for transcription.</string>
 </dict>
 </plist>

@@ -1,3 +1,4 @@
+import AVFoundation
 import Foundation
 import Observation
 
@@ -6,22 +7,28 @@ import Observation
 ///
 /// Sources are started separately: if one fails (say, the microphone isn't
 /// allowed) the other still records and the problem is reported in
-/// `sourceIssues`. Transcription will run only after the audio is saved, so
-/// it can never interrupt or lose a recording.
+/// `sourceIssues`. Transcription runs only after the audio is saved, in the
+/// background, so it can never interrupt or lose a recording.
 @MainActor
 @Observable
 final class RecordingCoordinator {
     private(set) var state: RecordingState = .idle
     /// Sources that aren't recording during the current recording, with why.
     private(set) var sourceIssues: [AudioSource: String] = [:]
+    /// How many saved recordings are still waiting for or having a transcript made.
+    private(set) var transcriptionsInProgress = 0
+    /// Why the last transcription produced no transcript, if it didn't.
+    private(set) var transcriptionIssue: String?
 
     private let transcriptionService: TranscriptionService
+    private var transcriptionChain: Task<Void, Never>?
 
     private struct Session {
         let directory: URL
         let store: RecordingStore
         let startedAt: Date
         let microphoneName: String?
+        let languageIdentifier: String?
         var microphone: MicrophoneInput?
         var microphoneWriter: TrackWriter?
         var systemAudio: SystemAudioTap?
@@ -48,7 +55,8 @@ final class RecordingCoordinator {
         into recordingsRoot: URL,
         microphoneDeviceID: String?,
         microphoneAllowed: Bool,
-        systemAudioAccess: PermissionStatus
+        systemAudioAccess: PermissionStatus,
+        transcriptionLanguage: String?
     ) {
         guard RecordingStateMachine.canTransition(from: state, to: .preparing) else { return }
         state = .preparing
@@ -71,6 +79,7 @@ final class RecordingCoordinator {
             store: store,
             startedAt: Date(),
             microphoneName: microphone.deviceName,
+            languageIdentifier: transcriptionLanguage,
             systemAudioUnverified: systemAudioAccess != .granted
         )
 
@@ -133,8 +142,10 @@ final class RecordingCoordinator {
         session.systemAudio?.stop()
         session.systemAudio = nil
         if let writer = session.systemAudioWriter {
-            if writer.hasHeardAudio, let startHostTime = writer.finish() {
-                session.systemAudioSegments.append(RecordingMixer.Track(url: writer.url, startHostTime: startHostTime))
+            if writer.hasHeardAudio {
+                session.systemAudioSegments += writer.finish().map {
+                    RecordingMixer.Track(url: $0.url, startHostTime: $0.startHostTime, source: .systemAudio)
+                }
             } else {
                 writer.discard()
             }
@@ -155,34 +166,31 @@ final class RecordingCoordinator {
         }
     }
 
+    /// Probing access creates a tap of its own, and doing that while another
+    /// tap is running disrupts it (and the microphone with it), so it's only
+    /// ever done with no tap running.
     private func performSystemAudioCheck() {
         guard var session else { return }
         defer { self.session = session }
 
-        if SystemAudioTap.hasAccess() == false {
-            if session.systemAudio != nil {
-                stopSystemAudio(in: &session)
-                session.systemAudioUnverified = true
+        if session.systemAudio != nil {
+            // Running and verified: leave it alone.
+            guard session.systemAudioUnverified else { return }
+            if session.systemAudioWriter?.hasHeardAudio == true {
+                session.systemAudioUnverified = false
+                return
             }
-            sourceIssues[.systemAudio] = Self.systemAudioDenied
-            return
-        }
-
-        if session.systemAudio == nil {
-            // Access was turned back on, or the previous start failed.
-            sourceIssues[.systemAudio] = nil
-            startSystemAudio(in: &session)
-            return
-        }
-
-        guard session.systemAudioUnverified else { return }
-        if session.systemAudioWriter?.hasHeardAudio == true {
-            session.systemAudioUnverified = false
-        } else {
             // Still only silence; a fresh tap picks up a permission granted meanwhile.
             stopSystemAudio(in: &session)
-            startSystemAudio(in: &session)
         }
+
+        if SystemAudioTap.hasAccess() == false {
+            sourceIssues[.systemAudio] = Self.systemAudioDenied
+            session.systemAudioUnverified = true
+            return
+        }
+        sourceIssues[.systemAudio] = nil
+        startSystemAudio(in: &session)
     }
 
     // MARK: Finishing
@@ -196,8 +204,10 @@ final class RecordingCoordinator {
         stopSystemAudio(in: &session)
         session.microphone?.stop()
         var tracks = session.systemAudioSegments
-        if let writer = session.microphoneWriter, let startHostTime = writer.finish() {
-            tracks.append(RecordingMixer.Track(url: writer.url, startHostTime: startHostTime))
+        if let writer = session.microphoneWriter {
+            tracks += writer.finish().map {
+                RecordingMixer.Track(url: $0.url, startHostTime: $0.startHostTime, source: .microphone)
+            }
         }
         let endedAt = Date()
 
@@ -206,11 +216,10 @@ final class RecordingCoordinator {
             Self.removeIfEmpty(session.directory)
             failure = failure ?? .noAudioSource(reason: "No audio arrived from any source.")
         } else {
+            var mixed = false
             do {
                 try await RecordingMixer.mix(tracks, into: session.directory.appending(path: "recording.m4a"))
-                for track in tracks {
-                    try? FileManager.default.removeItem(at: track.url)
-                }
+                mixed = true
             } catch {
                 failure = failure ?? .saveFailed(reason: error.localizedDescription)
             }
@@ -224,11 +233,99 @@ final class RecordingCoordinator {
                 systemAudio: !session.systemAudioSegments.isEmpty
             )
             try? session.store.write(metadata, to: session.directory)
+
+            // The raw tracks are kept until transcription has used them, and
+            // for good if the mix failed, so the audio can't be lost.
+            queueTranscription(
+                tracks: tracks,
+                session: session,
+                metadata: metadata,
+                deleteTracksAfterwards: mixed
+            )
         }
 
         self.session = nil
         sourceIssues = [:]
         transition(to: failure.map { .failed($0) } ?? .idle)
+    }
+
+    // MARK: Transcription
+
+    /// Transcripts are made one at a time, after the audio is safely saved.
+    private func queueTranscription(
+        tracks: [RecordingMixer.Track],
+        session: Session,
+        metadata: RecordingMetadata,
+        deleteTracksAfterwards: Bool
+    ) {
+        let origin = tracks.map(\.startHostTime).min() ?? 0
+        let inputs = tracks.map {
+            TranscriptionTrack(
+                speaker: $0.source.speakerLabel,
+                url: $0.url,
+                offset: AVAudioTime.seconds(forHostTime: $0.startHostTime - origin)
+            )
+        }
+        let service = transcriptionService
+        let language = session.languageIdentifier
+        let directory = session.directory
+        let store = session.store
+        let trackURLs = tracks.map(\.url)
+
+        transcriptionsInProgress += 1
+        transcriptionIssue = nil
+        let previous = transcriptionChain
+        transcriptionChain = Task { [weak self] in
+            await previous?.value
+            let outcome: Result<TranscriptionResult, Error>
+            do {
+                outcome = .success(try await service.transcribe(inputs, languageIdentifier: language))
+            } catch {
+                outcome = .failure(error)
+            }
+            self?.finishTranscription(
+                outcome,
+                directory: directory,
+                store: store,
+                metadata: metadata,
+                trackURLs: deleteTracksAfterwards ? trackURLs : []
+            )
+        }
+    }
+
+    private func finishTranscription(
+        _ outcome: Result<TranscriptionResult, Error>,
+        directory: URL,
+        store: RecordingStore,
+        metadata: RecordingMetadata,
+        trackURLs: [URL]
+    ) {
+        transcriptionsInProgress -= 1
+        for url in trackURLs {
+            try? FileManager.default.removeItem(at: url)
+        }
+
+        switch outcome {
+        case .success(let result) where result.segments.isEmpty:
+            report("No speech was found in the recording.")
+        case .success(let result):
+            do {
+                try store.writeTranscript(TranscriptFormatter.text(from: result.segments), to: directory)
+                var updated = metadata
+                updated.language = result.language
+                try? store.write(updated, to: directory)
+                Announcer.post("Transcript saved.")
+            } catch {
+                report("The transcript couldn't be saved. \(error.localizedDescription)")
+            }
+        case .failure(let error):
+            report(error.localizedDescription)
+        }
+    }
+
+    private func report(_ issue: String) {
+        transcriptionIssue = issue
+        Announcer.post(issue)
     }
 
     // MARK: Monitoring

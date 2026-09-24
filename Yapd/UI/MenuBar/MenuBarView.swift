@@ -28,6 +28,14 @@ struct MenuBarView: View {
             startRecordingItems
         }
 
+        if coordinator.transcriptionsInProgress > 0 {
+            Divider()
+            Label("Transcribing\u{2026}", systemImage: "text.bubble")
+        } else if let issue = coordinator.transcriptionIssue {
+            Divider()
+            Label(issue, systemImage: "exclamationmark.triangle")
+        }
+
         Divider()
 
         Button("Open Recordings") { openRecordingsFolder() }

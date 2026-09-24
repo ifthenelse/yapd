@@ -12,6 +12,7 @@ enum RecordingMixer {
         var url: URL
         /// Host time of the track's first sample, used to line tracks up.
         var startHostTime: UInt64
+        var source: AudioSource
     }
 
     static func mix(_ tracks: [Track], into output: URL) async throws {

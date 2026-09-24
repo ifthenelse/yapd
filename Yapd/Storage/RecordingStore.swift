@@ -56,6 +56,10 @@ struct RecordingStore {
         try data.write(to: directory.appending(path: "metadata.json"), options: .atomic)
     }
 
+    func writeTranscript(_ text: String, to directory: URL) throws {
+        try text.write(to: directory.appending(path: "transcript.txt"), atomically: true, encoding: .utf8)
+    }
+
     /// Verifies the root directory exists (creating it if needed) and is
     /// writable. Used during setup and before each recording starts.
     func verifyRootIsWritable() throws {

@@ -6,6 +6,7 @@ struct SettingsView: View {
     @Environment(AppState.self) private var appState
     @Environment(\.dismissWindow) private var dismissWindow
     @State private var microphones: [MicrophoneDevice] = []
+    @State private var languages: [Locale] = []
 
     var body: some View {
         Form {
@@ -18,6 +19,7 @@ struct SettingsView: View {
             Section("Recording") {
                 folderRow
                 microphoneRow
+                languageRow
                 LabeledContent("Start and stop recording") {
                     Text(HotkeyManager.displayString)
                 }
@@ -34,6 +36,10 @@ struct SettingsView: View {
         .onAppear {
             appState.bringSettingsToFront()
             microphones = MicrophoneDevice.all()
+        }
+        .task {
+            languages = await appState.transcriptionService.supportedLanguages()
+                .sorted { name(of: $0).localizedStandardCompare(name(of: $1)) == .orderedAscending }
         }
         .task {
             // Keep statuses live while the window is open, e.g. as the user
@@ -83,6 +89,25 @@ struct SettingsView: View {
                 Text(device.name).tag(Optional(device.id))
             }
         }
+    }
+
+    private var languageRow: some View {
+        Picker("Transcription language", selection: Binding(
+            get: {
+                let selected = appState.settings.transcriptionLanguageIdentifier
+                return languages.contains { $0.identifier(.bcp47) == selected } ? selected : nil
+            },
+            set: { newValue in appState.updateSettings { $0.transcriptionLanguageIdentifier = newValue } }
+        )) {
+            Text("System Language").tag(String?.none)
+            ForEach(languages, id: \.identifier) { locale in
+                Text(name(of: locale)).tag(Optional(locale.identifier(.bcp47)))
+            }
+        }
+    }
+
+    private func name(of locale: Locale) -> String {
+        Locale.current.localizedString(forIdentifier: locale.identifier) ?? locale.identifier
     }
 
     private func chooseFolder() {

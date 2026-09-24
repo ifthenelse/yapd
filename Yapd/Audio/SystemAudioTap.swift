@@ -69,7 +69,7 @@ final class SystemAudioTap: AudioCaptureSource {
 
         var streamDescription = try tap.format
         let tapUID = try tap.uid
-        guard let format = AVAudioFormat(streamDescription: &streamDescription) else {
+        guard AVAudioFormat(streamDescription: &streamDescription) != nil else {
             throw SystemAudioTapError.unavailable("Computer audio uses an unsupported format.")
         }
 
@@ -94,7 +94,7 @@ final class SystemAudioTap: AudioCaptureSource {
         }
         self.aggregate = aggregate
 
-        let ioProcID = try Self.makeIOProc(device: aggregate.id, queue: queue, format: format, onBuffer: onBuffer)
+        let ioProcID = try Self.makeIOProc(device: aggregate.id, queue: queue, tapFormat: streamDescription, onBuffer: onBuffer)
         self.ioProcID = ioProcID
         try aggregate.start(IOProcID: ioProcID)
     }
@@ -126,11 +126,13 @@ final class SystemAudioTap: AudioCaptureSource {
     private nonisolated static func makeIOProc(
         device: AudioObjectID,
         queue: DispatchQueue,
-        format: AVAudioFormat,
+        tapFormat: AudioStreamBasicDescription,
         onBuffer: @escaping AudioBufferHandler
     ) throws -> AudioDeviceIOProcID {
+        let rates = SampleRateTracker(device: device, tapFormat: tapFormat)
         var procID: AudioDeviceIOProcID?
         let status = AudioDeviceCreateIOProcIDWithBlock(&procID, device, queue) { _, inputData, inputTime, _, _ in
+            let format = rates.format(at: mach_absolute_time())
             guard let buffer = AVAudioPCMBuffer(pcmFormat: format, bufferListNoCopy: inputData, deallocator: nil) else {
                 return
             }
@@ -138,5 +140,51 @@ final class SystemAudioTap: AudioCaptureSource {
         }
         guard status == noErr, let procID else { throw AudioHardwareError(status) }
         return procID
+    }
+}
+
+/// The tap reports its format when it's created, but the audio it delivers
+/// runs at the aggregate device's rate, which can differ and can change while
+/// recording: a Bluetooth headset drops from 44.1/48 kHz to 16 kHz the moment
+/// its microphone opens. Mislabelling the rate plays the audio back at the
+/// wrong speed, so the rate is re-read from the device while it runs.
+private final class SampleRateTracker: @unchecked Sendable {
+    private let device: AudioObjectID
+    private let tapFormat: AudioStreamBasicDescription
+    private var current: AVAudioFormat
+    private var lastCheck: UInt64 = 0
+    private let interval = AVAudioTime.hostTime(forSeconds: 0.5)
+
+    init(device: AudioObjectID, tapFormat: AudioStreamBasicDescription) {
+        self.device = device
+        self.tapFormat = tapFormat
+        var description = tapFormat
+        if let rate = Self.nominalSampleRate(of: device) { description.mSampleRate = rate }
+        current = AVAudioFormat(streamDescription: &description)
+            ?? AVAudioFormat(standardFormatWithSampleRate: description.mSampleRate, channels: 2)!
+    }
+
+    /// Called on the IO queue only.
+    func format(at hostTime: UInt64) -> AVAudioFormat {
+        guard hostTime &- lastCheck > interval else { return current }
+        lastCheck = hostTime
+        if let rate = Self.nominalSampleRate(of: device), rate != current.sampleRate {
+            var description = tapFormat
+            description.mSampleRate = rate
+            if let updated = AVAudioFormat(streamDescription: &description) { current = updated }
+        }
+        return current
+    }
+
+    private static func nominalSampleRate(of device: AudioObjectID) -> Double? {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyNominalSampleRate,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain
+        )
+        var rate: Float64 = 0
+        var size = UInt32(MemoryLayout<Float64>.size)
+        guard AudioObjectGetPropertyData(device, &address, 0, nil, &size, &rate) == noErr, rate > 0 else { return nil }
+        return rate
     }
 }

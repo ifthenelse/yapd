@@ -38,7 +38,6 @@ targets:
         NSHumanReadableCopyright: ""
         NSMicrophoneUsageDescription: "Yapd records your microphone so your side of a meeting is captured alongside the call audio."
         NSAudioCaptureUsageDescription: "Yapd records the audio played by apps like Teams, Zoom, or Meet so the other participants are captured. Audio stays on this Mac."
-        NSSpeechRecognitionUsageDescription: "Yapd uses on-device speech recognition to produce a text transcript. No audio leaves this Mac for transcription."
     postBuildScripts:
       # Runs last, before code signing, so the stamped values are part of the signature.
       - name: Embed build info
