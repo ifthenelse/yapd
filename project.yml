@@ -1,0 +1,53 @@
+name: Yapd
+options:
+  bundleIdPrefix: com.ifthenelse
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    ENABLE_HARDENED_RUNTIME: YES
+    CODE_SIGN_STYLE: Automatic
+    # A stable signing identity is required for macOS to remember privacy
+    # permissions (microphone, system audio, accessibility) across builds.
+    DEVELOPMENT_TEAM: M97QJXJV2J
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+targets:
+  Yapd:
+    type: application
+    platform: macOS
+    sources:
+      - path: Yapd
+    info:
+      path: Yapd/App/Info.plist
+      properties:
+        CFBundleDisplayName: Yapd
+        LSUIElement: true
+        LSMinimumSystemVersion: "26.0"
+        NSHumanReadableCopyright: ""
+        NSMicrophoneUsageDescription: "Yapd records your microphone so your side of a meeting is captured alongside the call audio."
+        NSAudioCaptureUsageDescription: "Yapd records the audio played by apps like Teams, Zoom, or Meet so the other participants are captured. Audio stays on this Mac."
+        NSSpeechRecognitionUsageDescription: "Yapd uses on-device speech recognition to produce a text transcript. No audio leaves this Mac for transcription."
+    entitlements:
+      path: Yapd/App/Yapd.entitlements
+      properties:
+        com.apple.security.app-sandbox: false
+        # Hardened Runtime blocks the microphone (silently, with no prompt)
+        # unless this is declared.
+        com.apple.security.device.audio-input: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ifthenelse.Yapd
+        PRODUCT_NAME: Yapd
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    scheme:
+      testTargets: []
+      gatherCoverageData: false

@@ -1,0 +1,493 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00D26887EFF18C19C879A579 /* RecordingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8C0967405665C322B1F798 /* RecordingCoordinator.swift */; };
+		0D79811EE3DF19AF538DA1A3 /* RecordingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87362B664491241F8A575A4 /* RecordingState.swift */; };
+		1081543AF006BDFCAC17945F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86DF5725D359B49B5BFA0D80 /* Assets.xcassets */; };
+		53AC53F55FDDF3E27E7A8C7C /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFCCB10F60F0E81DDB88D5C /* HotkeyManager.swift */; };
+		5994F443F1685B197A69EF7C /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A682660BE596C42483D775 /* TranscriptionService.swift */; };
+		5CC95A1C6B3311C2085962F2 /* AudioCaptureSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE66FCA99571C86E9728473D /* AudioCaptureSource.swift */; };
+		6138859885615BC68319BFC4 /* HotkeyCombo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911884F55AC3A0541CD89E4D /* HotkeyCombo.swift */; };
+		65B012041498221B6B4AA71A /* YapdApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B248EF78B6FF7DB4C912A499 /* YapdApp.swift */; };
+		7C7D33E4B3992FF7BFA09A87 /* RecordingMixer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BA10C5B77A8C6D777CA32 /* RecordingMixer.swift */; };
+		8332338C6AC74BA102976A3A /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC33001B4925FCAA5EC3349 /* MenuBarView.swift */; };
+		99A5F876BA0BB6860CDCA657 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D5519916A3ABF999FF4486 /* AppState.swift */; };
+		B5AC08C0B971135C91927B9A /* AppleTranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59E7179F714120E36D4885D /* AppleTranscriptionService.swift */; };
+		C9002E68DD84ECAAAB2AA8B8 /* RecordingMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C848717D10C9E63CC84553 /* RecordingMetadata.swift */; };
+		C9D9F741E7C7007B0E82EFEE /* MicrophoneInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4A30E422C02105406BDFBA /* MicrophoneInput.swift */; };
+		DBDC587C1D63461066D5296F /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 2C0E3BDF656E257210EB7CC0 /* AppIcon.icon */; };
+		DDF1039A2E735FE63D3BC3A1 /* SystemAudioTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88F8BE21C637F1585E9B6EE /* SystemAudioTap.swift */; };
+		E5C06E29D3B5872AF20285D1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753EF40E61F5E72C97549605 /* SettingsView.swift */; };
+		E9860E26D2A43F7A573E863F /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5049A3A4E08DADE71CF32C /* SettingsStore.swift */; };
+		EB5DC9D7DF185903312B0D01 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E133DE595BEEC0A26EDE625 /* AppSettings.swift */; };
+		EC78DFE465DA06B4499D615C /* RecordingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D58D2EFE2D62B26AEDE6DB /* RecordingStore.swift */; };
+		ED0C3BBDBDEF82E892866C3C /* ShortcutRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4034EF2CFA6627F4C88CDF5B /* ShortcutRow.swift */; };
+		ED885A41BF0FE57FAAD6028B /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99935D6F186EFCCBCD038231 /* PermissionManager.swift */; };
+		EEBF79B0A829E99AAA8F8001 /* TrackWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C7ECC088973D44870DACEB5 /* TrackWriter.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		046263ED322358279D67E71F /* Yapd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Yapd.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		274AE08002B140EF2B14CB30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2C0E3BDF656E257210EB7CC0 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		2FFCCB10F60F0E81DDB88D5C /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
+		3C7ECC088973D44870DACEB5 /* TrackWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackWriter.swift; sourceTree = "<group>"; };
+		4034EF2CFA6627F4C88CDF5B /* ShortcutRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutRow.swift; sourceTree = "<group>"; };
+		461BA10C5B77A8C6D777CA32 /* RecordingMixer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingMixer.swift; sourceTree = "<group>"; };
+		4E133DE595BEEC0A26EDE625 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		55A682660BE596C42483D775 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
+		5D4A30E422C02105406BDFBA /* MicrophoneInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneInput.swift; sourceTree = "<group>"; };
+		69D5519916A3ABF999FF4486 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		6EC33001B4925FCAA5EC3349 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		73D58D2EFE2D62B26AEDE6DB /* RecordingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingStore.swift; sourceTree = "<group>"; };
+		753EF40E61F5E72C97549605 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		7A8C0967405665C322B1F798 /* RecordingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingCoordinator.swift; sourceTree = "<group>"; };
+		86DF5725D359B49B5BFA0D80 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		88C848717D10C9E63CC84553 /* RecordingMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingMetadata.swift; sourceTree = "<group>"; };
+		911884F55AC3A0541CD89E4D /* HotkeyCombo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyCombo.swift; sourceTree = "<group>"; };
+		9390149A0DFA691F8BA7B3E0 /* Yapd.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Yapd.entitlements; sourceTree = "<group>"; };
+		99935D6F186EFCCBCD038231 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
+		B248EF78B6FF7DB4C912A499 /* YapdApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YapdApp.swift; sourceTree = "<group>"; };
+		D59E7179F714120E36D4885D /* AppleTranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleTranscriptionService.swift; sourceTree = "<group>"; };
+		EE66FCA99571C86E9728473D /* AudioCaptureSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCaptureSource.swift; sourceTree = "<group>"; };
+		F87362B664491241F8A575A4 /* RecordingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingState.swift; sourceTree = "<group>"; };
+		F88F8BE21C637F1585E9B6EE /* SystemAudioTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAudioTap.swift; sourceTree = "<group>"; };
+		FB5049A3A4E08DADE71CF32C /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		21E22003E2F4C3A667AE54A2 /* Transcription */ = {
+			isa = PBXGroup;
+			children = (
+				D59E7179F714120E36D4885D /* AppleTranscriptionService.swift */,
+				55A682660BE596C42483D775 /* TranscriptionService.swift */,
+			);
+			path = Transcription;
+			sourceTree = "<group>";
+		};
+		248106F1DF30907F47926333 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				4E133DE595BEEC0A26EDE625 /* AppSettings.swift */,
+				FB5049A3A4E08DADE71CF32C /* SettingsStore.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		25616267FF4AA6C03A88A86A = {
+			isa = PBXGroup;
+			children = (
+				CF1C10BAB6992A3F7AB3776F /* Yapd */,
+				AC5C7C9F7A23454D192D11F4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		403E33577DE9DEF3CEA040A0 /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+				99935D6F186EFCCBCD038231 /* PermissionManager.swift */,
+			);
+			path = Permissions;
+			sourceTree = "<group>";
+		};
+		4184461683F54832E50F7E13 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				4AFBFD1C80C6D74282AC430D /* MenuBar */,
+				79C478268BEB112FD8477743 /* Settings */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		42EEE92326613B04229E8558 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				88C848717D10C9E63CC84553 /* RecordingMetadata.swift */,
+				73D58D2EFE2D62B26AEDE6DB /* RecordingStore.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		44BBC1398ADC5299479F9492 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				EE66FCA99571C86E9728473D /* AudioCaptureSource.swift */,
+				5D4A30E422C02105406BDFBA /* MicrophoneInput.swift */,
+				461BA10C5B77A8C6D777CA32 /* RecordingMixer.swift */,
+				F88F8BE21C637F1585E9B6EE /* SystemAudioTap.swift */,
+				3C7ECC088973D44870DACEB5 /* TrackWriter.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		44F1A930D3B79D40D512C9E3 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				2C0E3BDF656E257210EB7CC0 /* AppIcon.icon */,
+				69D5519916A3ABF999FF4486 /* AppState.swift */,
+				86DF5725D359B49B5BFA0D80 /* Assets.xcassets */,
+				274AE08002B140EF2B14CB30 /* Info.plist */,
+				9390149A0DFA691F8BA7B3E0 /* Yapd.entitlements */,
+				B248EF78B6FF7DB4C912A499 /* YapdApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		4AFBFD1C80C6D74282AC430D /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				6EC33001B4925FCAA5EC3349 /* MenuBarView.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
+		79C478268BEB112FD8477743 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				753EF40E61F5E72C97549605 /* SettingsView.swift */,
+				4034EF2CFA6627F4C88CDF5B /* ShortcutRow.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		7CF2183147C47287888DB220 /* Recording */ = {
+			isa = PBXGroup;
+			children = (
+				7A8C0967405665C322B1F798 /* RecordingCoordinator.swift */,
+				F87362B664491241F8A575A4 /* RecordingState.swift */,
+			);
+			path = Recording;
+			sourceTree = "<group>";
+		};
+		AC5C7C9F7A23454D192D11F4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				046263ED322358279D67E71F /* Yapd.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CF1C10BAB6992A3F7AB3776F /* Yapd */ = {
+			isa = PBXGroup;
+			children = (
+				44F1A930D3B79D40D512C9E3 /* App */,
+				44BBC1398ADC5299479F9492 /* Audio */,
+				F558281E98AA3E80E4910503 /* Hotkey */,
+				403E33577DE9DEF3CEA040A0 /* Permissions */,
+				7CF2183147C47287888DB220 /* Recording */,
+				248106F1DF30907F47926333 /* Settings */,
+				42EEE92326613B04229E8558 /* Storage */,
+				21E22003E2F4C3A667AE54A2 /* Transcription */,
+				4184461683F54832E50F7E13 /* UI */,
+			);
+			path = Yapd;
+			sourceTree = "<group>";
+		};
+		F558281E98AA3E80E4910503 /* Hotkey */ = {
+			isa = PBXGroup;
+			children = (
+				911884F55AC3A0541CD89E4D /* HotkeyCombo.swift */,
+				2FFCCB10F60F0E81DDB88D5C /* HotkeyManager.swift */,
+			);
+			path = Hotkey;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1AB14D604EC384BA47653104 /* Yapd */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5ED4671956B925BC1E9EC3A3 /* Build configuration list for PBXNativeTarget "Yapd" */;
+			buildPhases = (
+				5B0CE2B3E13E694434E453F7 /* Sources */,
+				34F1CD92E919EDE5EE05863A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Yapd;
+			packageProductDependencies = (
+			);
+			productName = Yapd;
+			productReference = 046263ED322358279D67E71F /* Yapd.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BCFE12D48D2428A1F3286500 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					1AB14D604EC384BA47653104 = {
+						DevelopmentTeam = M97QJXJV2J;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 460B4DFB32E6D686A4209190 /* Build configuration list for PBXProject "Yapd" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 25616267FF4AA6C03A88A86A;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = AC5C7C9F7A23454D192D11F4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1AB14D604EC384BA47653104 /* Yapd */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		34F1CD92E919EDE5EE05863A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBDC587C1D63461066D5296F /* AppIcon.icon in Resources */,
+				1081543AF006BDFCAC17945F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5B0CE2B3E13E694434E453F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB5DC9D7DF185903312B0D01 /* AppSettings.swift in Sources */,
+				99A5F876BA0BB6860CDCA657 /* AppState.swift in Sources */,
+				B5AC08C0B971135C91927B9A /* AppleTranscriptionService.swift in Sources */,
+				5CC95A1C6B3311C2085962F2 /* AudioCaptureSource.swift in Sources */,
+				6138859885615BC68319BFC4 /* HotkeyCombo.swift in Sources */,
+				53AC53F55FDDF3E27E7A8C7C /* HotkeyManager.swift in Sources */,
+				8332338C6AC74BA102976A3A /* MenuBarView.swift in Sources */,
+				C9D9F741E7C7007B0E82EFEE /* MicrophoneInput.swift in Sources */,
+				ED885A41BF0FE57FAAD6028B /* PermissionManager.swift in Sources */,
+				00D26887EFF18C19C879A579 /* RecordingCoordinator.swift in Sources */,
+				C9002E68DD84ECAAAB2AA8B8 /* RecordingMetadata.swift in Sources */,
+				7C7D33E4B3992FF7BFA09A87 /* RecordingMixer.swift in Sources */,
+				0D79811EE3DF19AF538DA1A3 /* RecordingState.swift in Sources */,
+				EC78DFE465DA06B4499D615C /* RecordingStore.swift in Sources */,
+				E9860E26D2A43F7A573E863F /* SettingsStore.swift in Sources */,
+				E5C06E29D3B5872AF20285D1 /* SettingsView.swift in Sources */,
+				ED0C3BBDBDEF82E892866C3C /* ShortcutRow.swift in Sources */,
+				DDF1039A2E735FE63D3BC3A1 /* SystemAudioTap.swift in Sources */,
+				EEBF79B0A829E99AAA8F8001 /* TrackWriter.swift in Sources */,
+				5994F443F1685B197A69EF7C /* TranscriptionService.swift in Sources */,
+				65B012041498221B6B4AA71A /* YapdApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		15998AABB2957C1D812D8AF5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Yapd/App/Yapd.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Yapd/App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ifthenelse.Yapd;
+				PRODUCT_NAME = Yapd;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		4343BCC8958887D48521AEDD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = M97QJXJV2J;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		48D5F851DA73EB5A2996ED9F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Yapd/App/Yapd.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Yapd/App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ifthenelse.Yapd;
+				PRODUCT_NAME = Yapd;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C569A3006A08852A816FCC22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = M97QJXJV2J;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		460B4DFB32E6D686A4209190 /* Build configuration list for PBXProject "Yapd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C569A3006A08852A816FCC22 /* Debug */,
+				4343BCC8958887D48521AEDD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5ED4671956B925BC1E9EC3A3 /* Build configuration list for PBXNativeTarget "Yapd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48D5F851DA73EB5A2996ED9F /* Debug */,
+				15998AABB2957C1D812D8AF5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BCFE12D48D2428A1F3286500 /* Project object */;
+}

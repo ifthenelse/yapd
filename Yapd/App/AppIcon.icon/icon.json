@@ -1,0 +1,51 @@
+{
+  "fill-specializations" : [
+    {
+      "value" : {
+        "automatic-gradient" : "extended-srgb:0.96000,0.96000,0.97000,1.00000"
+      }
+    },
+    {
+      "appearance" : "dark",
+      "value" : "automatic"
+    }
+  ],
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "glass" : true,
+          "image-name" : "icon-ear.png",
+          "name" : "ear"
+        },
+        {
+          "glass" : true,
+          "image-name-specializations" : [
+            {
+              "value" : "icon-body-light.png"
+            },
+            {
+              "appearance" : "dark",
+              "value" : "icon-body-dark.png"
+            }
+          ],
+          "name" : "body"
+        }
+      ],
+      "lighting" : "individual",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : [
+      "macOS"
+    ]
+  }
+}
