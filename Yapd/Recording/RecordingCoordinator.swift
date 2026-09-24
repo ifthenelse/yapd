@@ -309,8 +309,13 @@ final class RecordingCoordinator {
         case .success(let result) where result.segments.isEmpty:
             report("No speech was found in the recording.")
         case .success(let result):
+            let segments = EchoFilter.removeEchoes(
+                in: result.segments,
+                local: AudioSource.microphone.speakerLabel,
+                remote: AudioSource.systemAudio.speakerLabel
+            )
             do {
-                try store.writeTranscript(TranscriptFormatter.text(from: result.segments), to: directory)
+                try store.writeTranscript(TranscriptFormatter.text(from: segments), to: directory)
                 var updated = metadata
                 updated.language = result.language
                 try? store.write(updated, to: directory)

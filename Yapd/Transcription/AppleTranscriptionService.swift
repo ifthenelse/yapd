@@ -62,7 +62,8 @@ struct AppleTranscriptionService: TranscriptionService {
             for try await result in transcriber.results {
                 let text = String(result.text.characters).trimmingCharacters(in: .whitespacesAndNewlines)
                 guard !text.isEmpty else { continue }
-                found.append(TranscriptSegment(speaker: speaker, start: offset + result.range.start.seconds, text: text))
+                let start = offset + result.range.start.seconds
+                found.append(TranscriptSegment(speaker: speaker, start: start, end: start + result.range.duration.seconds, text: text))
             }
             return found
         }
