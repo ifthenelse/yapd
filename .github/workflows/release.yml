@@ -1,0 +1,62 @@
+name: Release
+
+# Run from the Actions tab ("Run workflow"). Builds the version in
+# Config/Version.xcconfig and publishes it as a GitHub release. To publish a new
+# one, first bump the version with scripts/version and push.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: release
+
+jobs:
+  release:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version
+        run: |
+          echo "VERSION=$(sed -n 's/^MARKETING_VERSION = //p' Config/Version.xcconfig)" >> "$GITHUB_ENV"
+          echo "BUILD=$(sed -n 's/^CURRENT_PROJECT_VERSION = //p' Config/Version.xcconfig)" >> "$GITHUB_ENV"
+
+      - name: Refuse to overwrite an existing release
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" >/dev/null; then
+            echo "::error::v$VERSION already exists. Bump the version with scripts/version, push, and run again."
+            exit 1
+          fi
+
+      - name: Build
+        run: |
+          brew install xcodegen
+          xcodegen generate
+          # ponytail: ad-hoc signed, not notarized. Add Developer ID signing and
+          # notarization here when the certificate and Apple ID secrets exist.
+          xcodebuild -project Yapd.xcodeproj -scheme Yapd -configuration Release \
+            -destination 'platform=macOS,arch=arm64' -derivedDataPath build \
+            CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- DEVELOPMENT_TEAM= build
+          codesign --verify --strict build/Build/Products/Release/Yapd.app
+
+      - name: Package
+        run: |
+          ditto -c -k --keepParent build/Build/Products/Release/Yapd.app "Yapd-$VERSION.zip"
+          shasum -a 256 "Yapd-$VERSION.zip" > "Yapd-$VERSION.zip.sha256"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat > notes.md <<EOF
+          Yapd $VERSION (build $BUILD), commit ${GITHUB_SHA::7}. Requires macOS 26 or later.
+
+          This build is ad-hoc signed and not notarized. On first launch, right-click **Yapd.app** and choose **Open**, or run \`xattr -dr com.apple.quarantine Yapd.app\`. macOS may ask for the microphone, system audio and accessibility permissions again after each update.
+
+          Verify the download with \`shasum -a 256 -c Yapd-$VERSION.zip.sha256\`.
+          EOF
+          # Versions below 1.0 are marked as pre-releases.
+          [[ "$VERSION" == 0.* ]] && PRERELEASE=--prerelease || PRERELEASE=
+          gh release create "v$VERSION" "Yapd-$VERSION.zip" "Yapd-$VERSION.zip.sha256" \
+            --target "$GITHUB_SHA" --title "Yapd $VERSION ($BUILD)" --notes-file notes.md $PRERELEASE
