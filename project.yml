@@ -51,6 +51,9 @@ targets:
             /usr/libexec/PlistBuddy -c "Delete :$key" "$plist" 2>/dev/null || true
             /usr/libexec/PlistBuddy -c "Add :$key string $value" "$plist"
           done
+          # Finder caches a bundle's icon keyed on the bundle's own modification
+          # date, which Xcode doesn't update, so a changed icon would never show.
+          touch "$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME"
     entitlements:
       path: Yapd/App/Yapd.entitlements
       properties:

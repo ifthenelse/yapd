@@ -294,7 +294,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "plist=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\ncommit=$(git -C \"$SRCROOT\" describe --always --dirty --abbrev=10 2>/dev/null || echo unknown)\ndate=$(date -u +%Y-%m-%dT%H:%M:%SZ)\nfor entry in \"YapdGitCommit:$commit\" \"YapdBuildDate:$date\"; do\n  key=${entry%%:*}; value=${entry#*:}\n  /usr/libexec/PlistBuddy -c \"Delete :$key\" \"$plist\" 2>/dev/null || true\n  /usr/libexec/PlistBuddy -c \"Add :$key string $value\" \"$plist\"\ndone\n";
+			shellScript = "plist=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\ncommit=$(git -C \"$SRCROOT\" describe --always --dirty --abbrev=10 2>/dev/null || echo unknown)\ndate=$(date -u +%Y-%m-%dT%H:%M:%SZ)\nfor entry in \"YapdGitCommit:$commit\" \"YapdBuildDate:$date\"; do\n  key=${entry%%:*}; value=${entry#*:}\n  /usr/libexec/PlistBuddy -c \"Delete :$key\" \"$plist\" 2>/dev/null || true\n  /usr/libexec/PlistBuddy -c \"Add :$key string $value\" \"$plist\"\ndone\n# Finder caches a bundle's icon keyed on the bundle's own modification\n# date, which Xcode doesn't update, so a changed icon would never show.\ntouch \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
