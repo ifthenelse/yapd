@@ -16,7 +16,6 @@ final class HotkeyManager {
     static let keyEquivalent: KeyEquivalent = "-"
     static let eventModifiers: EventModifiers = [.control, .option, .command]
 
-    private nonisolated static let minusKeyCode: UInt16 = 27
     private nonisolated static let modifiers: NSEvent.ModifierFlags = [.control, .option, .command]
     private nonisolated static let relevantModifiers: NSEvent.ModifierFlags = [.control, .option, .command, .shift, .function]
 
@@ -45,7 +44,9 @@ final class HotkeyManager {
     }
 
     private nonisolated static func matches(_ event: NSEvent) -> Bool {
-        event.keyCode == minusKeyCode
+        // By character, not key code: key codes are physical positions, and the
+        // minus key is somewhere else on non-US layouts.
+        event.charactersIgnoringModifiers == "-"
             && event.modifierFlags.intersection(relevantModifiers) == modifiers
     }
 }
