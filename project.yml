@@ -5,6 +5,10 @@ options:
     macOS: "26.0"
   createIntermediateGroups: true
 
+configFiles:
+  Debug: Config/Version.xcconfig
+  Release: Config/Version.xcconfig
+
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -15,8 +19,7 @@ settings:
     # A stable signing identity is required for macOS to remember privacy
     # permissions (microphone, system audio, accessibility) across builds.
     DEVELOPMENT_TEAM: M97QJXJV2J
-    MARKETING_VERSION: "0.1.0"
-    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
 
 targets:
   Yapd:
@@ -28,12 +31,27 @@ targets:
       path: Yapd/App/Info.plist
       properties:
         CFBundleDisplayName: Yapd
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSUIElement: true
         LSMinimumSystemVersion: "26.0"
         NSHumanReadableCopyright: ""
         NSMicrophoneUsageDescription: "Yapd records your microphone so your side of a meeting is captured alongside the call audio."
         NSAudioCaptureUsageDescription: "Yapd records the audio played by apps like Teams, Zoom, or Meet so the other participants are captured. Audio stays on this Mac."
         NSSpeechRecognitionUsageDescription: "Yapd uses on-device speech recognition to produce a text transcript. No audio leaves this Mac for transcription."
+    postBuildScripts:
+      # Runs last, before code signing, so the stamped values are part of the signature.
+      - name: Embed build info
+        basedOnDependencyAnalysis: false
+        script: |
+          plist="$TARGET_BUILD_DIR/$INFOPLIST_PATH"
+          commit=$(git -C "$SRCROOT" describe --always --dirty --abbrev=10 2>/dev/null || echo unknown)
+          date=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          for entry in "YapdGitCommit:$commit" "YapdBuildDate:$date"; do
+            key=${entry%%:*}; value=${entry#*:}
+            /usr/libexec/PlistBuddy -c "Delete :$key" "$plist" 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Add :$key string $value" "$plist"
+          done
     entitlements:
       path: Yapd/App/Yapd.entitlements
       properties:

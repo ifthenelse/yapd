@@ -1,0 +1,3 @@
+// Single source of truth for the app's version. Edit with scripts/version.
+MARKETING_VERSION = 0.1.0
+CURRENT_PROJECT_VERSION = 1

@@ -14,8 +14,6 @@ final class RecordingCoordinator {
     private(set) var state: RecordingState = .idle
     /// Sources that aren't recording during the current recording, with why.
     private(set) var sourceIssues: [AudioSource: String] = [:]
-    /// Recent peak level per recording source, 0...1, in steps of 0.1.
-    private(set) var levels: [AudioSource: Float] = [:]
 
     private let transcriptionService: TranscriptionService
 
@@ -38,7 +36,7 @@ final class RecordingCoordinator {
     }
 
     private var session: Session?
-    private var meterTask: Task<Void, Never>?
+    private var monitorTask: Task<Void, Never>?
 
     private static let systemAudioDenied = "Computer audio isn't allowed. Turn it on in System Settings."
 
@@ -106,7 +104,7 @@ final class RecordingCoordinator {
 
         self.session = session
         transition(to: .recording(startedAt: session.startedAt))
-        startMetering()
+        startMonitoring()
     }
 
     func stopRecording() async {
@@ -144,8 +142,20 @@ final class RecordingCoordinator {
         session.systemAudioWriter = nil
     }
 
-    /// Runs every few seconds while recording.
+    /// Runs every few seconds while recording. Changes are announced, since
+    /// nobody is necessarily looking at the menu.
     private func checkSystemAudio() {
+        let before = sourceIssues[.systemAudio]
+        performSystemAudioCheck()
+        let after = sourceIssues[.systemAudio]
+        if let after, after != before {
+            Announcer.post(after)
+        } else if before != nil, after == nil {
+            Announcer.post("Computer audio is recording again.")
+        }
+    }
+
+    private func performSystemAudioCheck() {
         guard var session else { return }
         defer { self.session = session }
 
@@ -180,9 +190,8 @@ final class RecordingCoordinator {
     private func finishRecording(failure initialFailure: RecordingError?) async {
         guard var session, RecordingStateMachine.canTransition(from: state, to: .stopping) else { return }
         transition(to: .stopping)
-        meterTask?.cancel()
-        meterTask = nil
-        levels = [:]
+        monitorTask?.cancel()
+        monitorTask = nil
 
         stopSystemAudio(in: &session)
         session.microphone?.stop()
@@ -222,37 +231,27 @@ final class RecordingCoordinator {
         transition(to: failure.map { .failed($0) } ?? .idle)
     }
 
-    // MARK: Metering
+    // MARK: Monitoring
 
-    private func startMetering() {
-        meterTask = Task { [weak self] in
+    private func startMonitoring() {
+        monitorTask = Task { [weak self] in
             var tick = 0
             while !Task.isCancelled {
-                try? await Task.sleep(for: .milliseconds(100))
+                try? await Task.sleep(for: .milliseconds(500))
                 tick += 1
-                await self?.updateMeters(checkSystemAudio: tick % 30 == 0)
+                await self?.monitor(checkSystemAudio: tick % 6 == 0)
             }
         }
     }
 
-    private func updateMeters(checkSystemAudio shouldCheck: Bool) async {
+    private func monitor(checkSystemAudio shouldCheck: Bool) async {
         guard let session, case .recording = state else { return }
-        let writers: [(AudioSource, TrackWriter?)] = [
-            (.systemAudio, session.systemAudioWriter),
-            (.microphone, session.microphoneWriter),
-        ]
-        for (source, writer) in writers {
-            guard let writer else {
-                if levels[source] != nil { levels[source] = nil }
-                continue
-            }
-            if let error = writer.error {
+        for writer in [session.systemAudioWriter, session.microphoneWriter] {
+            if let error = writer?.error {
                 // Disk full or folder removed: stop cleanly, keeping what was captured.
                 await finishRecording(failure: .destinationUnwritable(reason: error.localizedDescription))
                 return
             }
-            let level = (writer.takePeakLevel() * 10).rounded() / 10
-            if levels[source] != level { levels[source] = level }
         }
         if shouldCheck { checkSystemAudio() }
     }
@@ -261,7 +260,20 @@ final class RecordingCoordinator {
 
     private func transition(to next: RecordingState) {
         guard RecordingStateMachine.canTransition(from: state, to: next) else { return }
+        let previous = state
         state = next
+
+        switch (previous, next) {
+        case (.preparing, .recording):
+            let issues = AudioSource.allCases.compactMap { sourceIssues[$0] }
+            Announcer.post((["Recording started."] + issues).joined(separator: " "))
+        case (.stopping, .idle):
+            Announcer.post("Recording saved.")
+        case (_, .failed(let error)):
+            Announcer.post("Recording failed. \(error.localizedDescription)")
+        default:
+            break
+        }
     }
 
     private static func message(for error: Error, source: AudioSource) -> String {

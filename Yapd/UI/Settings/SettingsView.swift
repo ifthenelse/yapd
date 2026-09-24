@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(AppState.self) private var appState
+    @Environment(\.dismissWindow) private var dismissWindow
     @State private var microphones: [MicrophoneDevice] = []
 
     var body: some View {
@@ -17,18 +18,23 @@ struct SettingsView: View {
             Section("Recording") {
                 folderRow
                 microphoneRow
-                ShortcutRow()
+                LabeledContent("Start and stop recording") {
+                    Text(HotkeyManager.displayString)
+                }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Start and stop recording")
+                .accessibilityValue(HotkeyManager.spokenString)
             }
         }
         .formStyle(.grouped)
         .scrollDisabled(true)
         .frame(width: 520)
         .fixedSize(horizontal: false, vertical: true)
+        .onExitCommand { dismissWindow(id: WindowID.settings) }
         .onAppear {
-            appState.windowWillPresent()
+            appState.bringSettingsToFront()
             microphones = MicrophoneDevice.all()
         }
-        .onDisappear { appState.windowDidClose() }
         .task {
             // Keep statuses live while the window is open, e.g. as the user
             // flips switches in System Settings.
@@ -52,10 +58,13 @@ struct SettingsView: View {
                 Image(nsImage: NSWorkspace.shared.icon(for: .folder))
                     .resizable()
                     .frame(width: 16, height: 16)
+                    .accessibilityHidden(true)
                 Text(FileManager.default.displayName(atPath: path))
                     .lineLimit(1)
                     .truncationMode(.middle)
+                    .accessibilityLabel(path)
                 Button("Choose\u{2026}", action: chooseFolder)
+                    .accessibilityLabel("Choose\u{2026} recordings folder")
             }
             .help(path)
         }
@@ -102,6 +111,7 @@ private struct PermissionRow: View {
                 HStack(spacing: 4) {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.green)
+                        .accessibilityHidden(true)
                     Text("Allowed")
                         .foregroundStyle(.secondary)
                 }
@@ -109,14 +119,19 @@ private struct PermissionRow: View {
                 Button("Allow") {
                     Task { await appState.resolvePermission(kind) }
                 }
+                .accessibilityLabel("Allow \(kind.displayName)")
             case .denied:
                 Button("Open System Settings") {
                     appState.permissionManager.openSystemSettings(for: kind)
                 }
+                .accessibilityLabel("Open System Settings to allow \(kind.displayName)")
             }
         } label: {
             Text(kind.displayName)
             Text(kind.usageExplanation)
         }
+        // A granted row is one spoken item; a row with a button keeps that
+        // button separately reachable.
+        .accessibilityElement(children: appState.status(of: kind) == .granted ? .combine : .contain)
     }
 }

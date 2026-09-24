@@ -13,11 +13,12 @@
 		53AC53F55FDDF3E27E7A8C7C /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FFCCB10F60F0E81DDB88D5C /* HotkeyManager.swift */; };
 		5994F443F1685B197A69EF7C /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55A682660BE596C42483D775 /* TranscriptionService.swift */; };
 		5CC95A1C6B3311C2085962F2 /* AudioCaptureSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE66FCA99571C86E9728473D /* AudioCaptureSource.swift */; };
-		6138859885615BC68319BFC4 /* HotkeyCombo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911884F55AC3A0541CD89E4D /* HotkeyCombo.swift */; };
 		65B012041498221B6B4AA71A /* YapdApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B248EF78B6FF7DB4C912A499 /* YapdApp.swift */; };
+		78C48B4536BD6D6CA54DD7B8 /* AboutPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CFD2008A288F0508F76574 /* AboutPanel.swift */; };
 		7C7D33E4B3992FF7BFA09A87 /* RecordingMixer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BA10C5B77A8C6D777CA32 /* RecordingMixer.swift */; };
 		8332338C6AC74BA102976A3A /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC33001B4925FCAA5EC3349 /* MenuBarView.swift */; };
 		99A5F876BA0BB6860CDCA657 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D5519916A3ABF999FF4486 /* AppState.swift */; };
+		B465A82FE9097B41343EF538 /* Announcer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92F8A1183E5C97E5EE45847 /* Announcer.swift */; };
 		B5AC08C0B971135C91927B9A /* AppleTranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59E7179F714120E36D4885D /* AppleTranscriptionService.swift */; };
 		C9002E68DD84ECAAAB2AA8B8 /* RecordingMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C848717D10C9E63CC84553 /* RecordingMetadata.swift */; };
 		C9D9F741E7C7007B0E82EFEE /* MicrophoneInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4A30E422C02105406BDFBA /* MicrophoneInput.swift */; };
@@ -27,7 +28,6 @@
 		E9860E26D2A43F7A573E863F /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5049A3A4E08DADE71CF32C /* SettingsStore.swift */; };
 		EB5DC9D7DF185903312B0D01 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E133DE595BEEC0A26EDE625 /* AppSettings.swift */; };
 		EC78DFE465DA06B4499D615C /* RecordingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D58D2EFE2D62B26AEDE6DB /* RecordingStore.swift */; };
-		ED0C3BBDBDEF82E892866C3C /* ShortcutRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4034EF2CFA6627F4C88CDF5B /* ShortcutRow.swift */; };
 		ED885A41BF0FE57FAAD6028B /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99935D6F186EFCCBCD038231 /* PermissionManager.swift */; };
 		EEBF79B0A829E99AAA8F8001 /* TrackWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C7ECC088973D44870DACEB5 /* TrackWriter.swift */; };
 /* End PBXBuildFile section */
@@ -38,7 +38,6 @@
 		2C0E3BDF656E257210EB7CC0 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		2FFCCB10F60F0E81DDB88D5C /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 		3C7ECC088973D44870DACEB5 /* TrackWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackWriter.swift; sourceTree = "<group>"; };
-		4034EF2CFA6627F4C88CDF5B /* ShortcutRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutRow.swift; sourceTree = "<group>"; };
 		461BA10C5B77A8C6D777CA32 /* RecordingMixer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingMixer.swift; sourceTree = "<group>"; };
 		4E133DE595BEEC0A26EDE625 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		55A682660BE596C42483D775 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
@@ -50,14 +49,16 @@
 		7A8C0967405665C322B1F798 /* RecordingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingCoordinator.swift; sourceTree = "<group>"; };
 		86DF5725D359B49B5BFA0D80 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		88C848717D10C9E63CC84553 /* RecordingMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingMetadata.swift; sourceTree = "<group>"; };
-		911884F55AC3A0541CD89E4D /* HotkeyCombo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyCombo.swift; sourceTree = "<group>"; };
 		9390149A0DFA691F8BA7B3E0 /* Yapd.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Yapd.entitlements; sourceTree = "<group>"; };
 		99935D6F186EFCCBCD038231 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		B248EF78B6FF7DB4C912A499 /* YapdApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YapdApp.swift; sourceTree = "<group>"; };
+		BEDA9CDF254521126388AE8B /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
 		D59E7179F714120E36D4885D /* AppleTranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleTranscriptionService.swift; sourceTree = "<group>"; };
+		E9CFD2008A288F0508F76574 /* AboutPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPanel.swift; sourceTree = "<group>"; };
 		EE66FCA99571C86E9728473D /* AudioCaptureSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCaptureSource.swift; sourceTree = "<group>"; };
 		F87362B664491241F8A575A4 /* RecordingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingState.swift; sourceTree = "<group>"; };
 		F88F8BE21C637F1585E9B6EE /* SystemAudioTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemAudioTap.swift; sourceTree = "<group>"; };
+		F92F8A1183E5C97E5EE45847 /* Announcer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Announcer.swift; sourceTree = "<group>"; };
 		FB5049A3A4E08DADE71CF32C /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -83,6 +84,7 @@
 		25616267FF4AA6C03A88A86A = {
 			isa = PBXGroup;
 			children = (
+				EDA6DA2E906E78B10BA72414 /* Config */,
 				CF1C10BAB6992A3F7AB3776F /* Yapd */,
 				AC5C7C9F7A23454D192D11F4 /* Products */,
 			);
@@ -129,6 +131,8 @@
 		44F1A930D3B79D40D512C9E3 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				E9CFD2008A288F0508F76574 /* AboutPanel.swift */,
+				F92F8A1183E5C97E5EE45847 /* Announcer.swift */,
 				2C0E3BDF656E257210EB7CC0 /* AppIcon.icon */,
 				69D5519916A3ABF999FF4486 /* AppState.swift */,
 				86DF5725D359B49B5BFA0D80 /* Assets.xcassets */,
@@ -151,7 +155,6 @@
 			isa = PBXGroup;
 			children = (
 				753EF40E61F5E72C97549605 /* SettingsView.swift */,
-				4034EF2CFA6627F4C88CDF5B /* ShortcutRow.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -189,10 +192,17 @@
 			path = Yapd;
 			sourceTree = "<group>";
 		};
+		EDA6DA2E906E78B10BA72414 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				BEDA9CDF254521126388AE8B /* Version.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		F558281E98AA3E80E4910503 /* Hotkey */ = {
 			isa = PBXGroup;
 			children = (
-				911884F55AC3A0541CD89E4D /* HotkeyCombo.swift */,
 				2FFCCB10F60F0E81DDB88D5C /* HotkeyManager.swift */,
 			);
 			path = Hotkey;
@@ -207,6 +217,7 @@
 			buildPhases = (
 				5B0CE2B3E13E694434E453F7 /* Sources */,
 				34F1CD92E919EDE5EE05863A /* Resources */,
+				67DAD9663E1B7E13EA10D151 /* Embed build info */,
 			);
 			buildRules = (
 			);
@@ -265,16 +276,39 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		67DAD9663E1B7E13EA10D151 /* Embed build info */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Embed build info";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "plist=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\ncommit=$(git -C \"$SRCROOT\" describe --always --dirty --abbrev=10 2>/dev/null || echo unknown)\ndate=$(date -u +%Y-%m-%dT%H:%M:%SZ)\nfor entry in \"YapdGitCommit:$commit\" \"YapdBuildDate:$date\"; do\n  key=${entry%%:*}; value=${entry#*:}\n  /usr/libexec/PlistBuddy -c \"Delete :$key\" \"$plist\" 2>/dev/null || true\n  /usr/libexec/PlistBuddy -c \"Add :$key string $value\" \"$plist\"\ndone\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5B0CE2B3E13E694434E453F7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78C48B4536BD6D6CA54DD7B8 /* AboutPanel.swift in Sources */,
+				B465A82FE9097B41343EF538 /* Announcer.swift in Sources */,
 				EB5DC9D7DF185903312B0D01 /* AppSettings.swift in Sources */,
 				99A5F876BA0BB6860CDCA657 /* AppState.swift in Sources */,
 				B5AC08C0B971135C91927B9A /* AppleTranscriptionService.swift in Sources */,
 				5CC95A1C6B3311C2085962F2 /* AudioCaptureSource.swift in Sources */,
-				6138859885615BC68319BFC4 /* HotkeyCombo.swift in Sources */,
 				53AC53F55FDDF3E27E7A8C7C /* HotkeyManager.swift in Sources */,
 				8332338C6AC74BA102976A3A /* MenuBarView.swift in Sources */,
 				C9D9F741E7C7007B0E82EFEE /* MicrophoneInput.swift in Sources */,
@@ -286,7 +320,6 @@
 				EC78DFE465DA06B4499D615C /* RecordingStore.swift in Sources */,
 				E9860E26D2A43F7A573E863F /* SettingsStore.swift in Sources */,
 				E5C06E29D3B5872AF20285D1 /* SettingsView.swift in Sources */,
-				ED0C3BBDBDEF82E892866C3C /* ShortcutRow.swift in Sources */,
 				DDF1039A2E735FE63D3BC3A1 /* SystemAudioTap.swift in Sources */,
 				EEBF79B0A829E99AAA8F8001 /* TrackWriter.swift in Sources */,
 				5994F443F1685B197A69EF7C /* TranscriptionService.swift in Sources */,
@@ -318,6 +351,7 @@
 		};
 		4343BCC8958887D48521AEDD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEDA9CDF254521126388AE8B /* Version.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -351,12 +385,12 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = M97QJXJV2J;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -366,7 +400,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 0.1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -399,6 +432,7 @@
 		};
 		C569A3006A08852A816FCC22 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEDA9CDF254521126388AE8B /* Version.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -432,12 +466,12 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = M97QJXJV2J;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -453,7 +487,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 0.1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

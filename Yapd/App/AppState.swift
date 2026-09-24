@@ -13,16 +13,12 @@ final class AppState {
     /// Fixed at launch: SwiftUI reads it for the Settings window's launch
     /// behaviour, which must not flip while that window is being shown.
     let isFirstLaunch: Bool
-    /// True while Settings is recording a new shortcut, so pressing the
-    /// current one doesn't toggle recording.
-    var isCapturingShortcut = false
 
     let recordingCoordinator: RecordingCoordinator
     let permissionManager = PermissionManager()
 
     private let settingsStore: SettingsStore
     private let hotkeyManager = HotkeyManager()
-    private var presentedWindowCount = 0
 
     init() {
         let store = SettingsStore()
@@ -59,17 +55,12 @@ final class AppState {
         guard updated != previous else { return }
         settings = updated
         settingsStore.save(updated)
-        if updated.hotkeyMode != previous.hotkeyMode { applyHotkey() }
     }
 
     // MARK: Permissions
 
-    /// Permissions that matter for the current configuration, in display order.
-    var relevantPermissions: [PermissionKind] {
-        var kinds: [PermissionKind] = [.microphone, .systemAudio, .speechRecognition]
-        if settings.hotkeyMode != .disabled { kinds.append(.accessibility) }
-        return kinds
-    }
+    /// The permissions Yapd needs, in display order.
+    var relevantPermissions: [PermissionKind] { PermissionKind.allCases }
 
     func status(of kind: PermissionKind) -> PermissionStatus {
         permissions[kind] ?? .notDetermined
@@ -139,7 +130,6 @@ final class AppState {
     }
 
     private func toggleRecording() {
-        guard !isCapturingShortcut else { return }
         switch recordingCoordinator.state {
         case .idle, .failed: startRecording()
         case .recording: stopRecording()
@@ -148,26 +138,20 @@ final class AppState {
     }
 
     private func applyHotkey() {
-        hotkeyManager.configure(mode: settings.hotkeyMode) { [weak self] in
+        hotkeyManager.start { [weak self] in
             self?.toggleRecording()
         }
     }
 
     // MARK: Windows
 
-    /// Yapd runs as an accessory app (no Dock icon, so its windows can't come
-    /// to the front) except while the Settings window is open. Call from the
-    /// window's `.onAppear` / `.onDisappear`.
-    func windowWillPresent() {
-        presentedWindowCount += 1
-        NSApp.setActivationPolicy(.regular)
-        NSApp.activate(ignoringOtherApps: true)
-    }
-
-    func windowDidClose() {
-        presentedWindowCount = max(0, presentedWindowCount - 1)
-        if presentedWindowCount == 0 {
-            NSApp.setActivationPolicy(.accessory)
+    /// Yapd never appears in the Dock, and an app without a Dock icon isn't
+    /// brought forward by macOS on its own, so put its window on top by hand.
+    func bringSettingsToFront() {
+        NSApp.activate()
+        for window in NSApp.windows where window.title == "Yapd Settings" {
+            window.makeKeyAndOrderFront(nil)
+            window.orderFrontRegardless()
         }
     }
 }

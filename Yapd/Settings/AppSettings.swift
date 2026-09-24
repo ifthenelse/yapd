@@ -7,7 +7,6 @@ struct AppSettings: Equatable {
     var recordingsDirectoryPath: String?
     var selectedMicrophoneID: String?
     var transcriptionLanguageIdentifier: String?
-    var hotkeyMode: HotkeyMode
     /// Whether Yapd has ever started a computer-audio tap, which is when
     /// macOS asks for the permission. The permission itself can't be queried.
     var systemAudioRequested: Bool
@@ -17,7 +16,6 @@ struct AppSettings: Equatable {
         recordingsDirectoryPath: nil,
         selectedMicrophoneID: nil,
         transcriptionLanguageIdentifier: nil,
-        hotkeyMode: .fnDoubleTap,
         systemAudioRequested: false
     )
 
@@ -32,14 +30,12 @@ struct AppSettings: Equatable {
     }
 }
 
-// Custom `Codable` so a settings file from before a new field was added
-// (e.g. `hotkeyMode`) still loads instead of silently resetting everything
-// to defaults — this app is under active development and its settings
-// format isn't stable yet.
+// Custom `Codable` so a settings file from before a field was added or removed
+// still loads instead of silently resetting everything to defaults.
 extension AppSettings: Codable {
     private enum CodingKeys: String, CodingKey {
         case hasLaunchedBefore, recordingsDirectoryPath, selectedMicrophoneID
-        case transcriptionLanguageIdentifier, hotkeyMode, systemAudioRequested
+        case transcriptionLanguageIdentifier, systemAudioRequested
     }
 
     init(from decoder: Decoder) throws {
@@ -48,7 +44,6 @@ extension AppSettings: Codable {
         recordingsDirectoryPath = try container.decodeIfPresent(String.self, forKey: .recordingsDirectoryPath)
         selectedMicrophoneID = try container.decodeIfPresent(String.self, forKey: .selectedMicrophoneID)
         transcriptionLanguageIdentifier = try container.decodeIfPresent(String.self, forKey: .transcriptionLanguageIdentifier)
-        hotkeyMode = try container.decodeIfPresent(HotkeyMode.self, forKey: .hotkeyMode) ?? .fnDoubleTap
         systemAudioRequested = try container.decodeIfPresent(Bool.self, forKey: .systemAudioRequested) ?? false
     }
 
@@ -58,7 +53,6 @@ extension AppSettings: Codable {
         try container.encodeIfPresent(recordingsDirectoryPath, forKey: .recordingsDirectoryPath)
         try container.encodeIfPresent(selectedMicrophoneID, forKey: .selectedMicrophoneID)
         try container.encodeIfPresent(transcriptionLanguageIdentifier, forKey: .transcriptionLanguageIdentifier)
-        try container.encode(hotkeyMode, forKey: .hotkeyMode)
         try container.encode(systemAudioRequested, forKey: .systemAudioRequested)
     }
 }

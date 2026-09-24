@@ -13,7 +13,6 @@ final class TrackWriter: @unchecked Sendable {
     private let lock = NSLock()
     private var file: AVAudioFile?
     private var firstHostTime: UInt64?
-    private var peakLevel: Float = 0
     private var heardAudio = false
     private var writeError: Error?
     private var isFinished = false
@@ -37,19 +36,10 @@ final class TrackWriter: @unchecked Sendable {
                     firstHostTime = time.isHostTimeValid ? time.hostTime : mach_absolute_time()
                 }
                 try file?.write(from: buffer)
-                peakLevel = max(peakLevel, peak)
                 if peak > 0 { heardAudio = true }
             } catch {
                 writeError = error
             }
-        }
-    }
-
-    /// The loudest sample since the last call, 0...1, for level meters.
-    func takePeakLevel() -> Float {
-        lock.withLock {
-            defer { peakLevel = 0 }
-            return min(peakLevel, 1)
         }
     }
 

@@ -83,14 +83,20 @@ final class PermissionManager {
         case .microphone:
             _ = await AVCaptureDevice.requestAccess(for: .audio)
         case .speechRecognition:
-            await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-                SFSpeechRecognizer.requestAuthorization { _ in continuation.resume() }
-            }
+            await Self.requestSpeechAuthorization()
         case .accessibility:
             let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
             _ = AXIsProcessTrustedWithOptions(options)
         case .systemAudio:
             await SystemAudioTap.requestAccess()
+        }
+    }
+
+    /// Nonisolated because Speech calls back on a background queue, and a
+    /// callback written inside a main-actor method would trap there.
+    private nonisolated static func requestSpeechAuthorization() async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            SFSpeechRecognizer.requestAuthorization { _ in continuation.resume() }
         }
     }
 

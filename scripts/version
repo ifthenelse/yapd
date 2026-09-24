@@ -1,0 +1,30 @@
+#!/bin/bash
+# Manage Yapd's version (Config/Version.xcconfig).
+#
+#   scripts/version                 show version and build number
+#   scripts/version set 1.2.0       set the version shown to users (x.y.z)
+#   scripts/version bump            increase the build number by one
+set -euo pipefail
+
+file="$(cd "$(dirname "$0")/.." && pwd)/Config/Version.xcconfig"
+read_key() { sed -n "s/^$1 = //p" "$file"; }
+
+case "${1:-show}" in
+  show)
+    echo "$(read_key MARKETING_VERSION) ($(read_key CURRENT_PROJECT_VERSION))"
+    ;;
+  set)
+    [[ "${2:-}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "usage: scripts/version set X.Y.Z" >&2; exit 1; }
+    sed -i '' "s/^MARKETING_VERSION = .*/MARKETING_VERSION = $2/" "$file"
+    "$0" show
+    ;;
+  bump)
+    build=$(read_key CURRENT_PROJECT_VERSION)
+    sed -i '' "s/^CURRENT_PROJECT_VERSION = .*/CURRENT_PROJECT_VERSION = $((build + 1))/" "$file"
+    "$0" show
+    ;;
+  *)
+    echo "usage: scripts/version [show | set X.Y.Z | bump]" >&2
+    exit 1
+    ;;
+esac
